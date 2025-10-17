@@ -89,16 +89,38 @@ public:
 		}
 	}
 	void remove_duplicates() {
-		for (Node* i = head; i != nullptr; i = i->next)
-		{
-			for (Node* current = head; current->next != nullptr;current = current->next)
-			{
-				if (current->data == current->next->data)
-				{
+		Node* current = head;
 
-					delete current;
+		while (current != nullptr) {
+			Node* temp = current->next;
+
+			while (temp != nullptr) {
+				Node* dubl = temp->next;
+
+				if (temp->data == current->data) {
+					if (temp->prev != nullptr) {
+						temp->prev->next = temp->next;
+					}
+					if (temp->next != nullptr) {
+						temp->next->prev = temp->prev;
+					}
+
+					if (temp == tail) {
+						tail = temp->prev;
+					}
+
+					if (temp == head) {
+						head = temp->next;
+					}
+					if (temp == tail) {
+						tail = temp->prev;
+					}
+					delete temp;
 				}
+
+				temp = dubl;
 			}
+			current = current->next;
 		}
 	}
 };
@@ -107,42 +129,60 @@ int main()
 {
 	setlocale(LC_ALL,"Russian");
 	DoublyLinkedList list;
-	char answer[4];
-	std::cout << "Хотите начать? (da/net)" << "\n";
-	std::cin >> answer;
-	std::cout << answer << "\n";
-	if (strcmp(answer,"da")==0)
-	{
 		std::cout << "Меню действий:" << "\n";
-		std::cout << "Добавить элемент в началo - addN" << "\n";
-		std::cout << "Добавить элемент в конец - addE" << "\n";
-		std::cout << "Удалить элемент с начала - deleteN" << "\n";
-		std::cout << "Удалить элемент с конца - deleteE" << "\n";
-		std::cout << "Отобразить список - show" << "\n";
-		std::cout << "Сортировать список - sort" << "\n";
-		std::cout << "Удалить дубликаты - dubl" << "\n";
-		std::cout << "Выйти - end" << "\n";
+		std::cout << "1. Добавить элемент в началo" << "\n";
+		std::cout << "2. Добавить элемент в конец" << "\n";
+		std::cout << "3. Удалить элемент с начала" << "\n";
+		std::cout << "4. Удалить элемент с конца" << "\n";
+		std::cout << "5. Отобразить список" << "\n";
+		std::cout << "6. Сортировать список" << "\n";
+		std::cout << "7. Удалить дубликаты" << "\n";
+		std::cout << "8. Выйти" << "\n";
 		int menu;
-		std::cin >> menu;
-		while (menu!=8)
+		do
 		{
+
+			std::cin >> menu;
 			switch (menu)
 			{
 			case 1: 
-				int num;
-				std::cin >> num;
-				list.push_front(num);
+				int num1;
+				std::cout << "Введите число, чтобы добавить в начало:" << "\n";
+				std::cin >> num1;
+				list.push_front(num1);
 				break;
 			case 2:
+				int num2;
+				std::cout << "Введите число, чтобы добавить в конец:" << "\n";
+				std::cin >> num2;
+				list.push_back(num2);
+				break;
+			case 3: 
+				std::cout << "Число удалено с начала" << "\n";
+				list.pop_front();
+				break;
+			case 4:
+				std::cout << "Число удалено с конца" << "\n";
+				list.pop_back();
+				break;
+			case 5:
+				std::cout << "Список:" << "\n";
 				list.display();
+				break;
+			case 6:
+				std::cout << "Сортированный список:" << "\n";
+				list.sort();
+				list.display();
+				break;
+			case 7:
+				std::cout << "Дубликаты удалены:" << "\n";
+				list.remove_duplicates();
+				list.display();
+				break;
+			case 8:
 				break;
 			default:
 				break;
 			}
-		}
-
-	}
-	else {
-		std::cout << "Конец";
-	}
+		} while (menu != 8);
 }
